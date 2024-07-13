@@ -1,0 +1,32 @@
+{
+    "name": "P2ych3",
+    "version": "1.0",
+    "description": "A Browser Extension that Detects Malicious Links Using Deep Learning Algorithm with Integrated IDS and IPS",
+    "manifest_version": 3,
+    "icons": {
+        "16": "./extension_icon/BrowserExtensionIcon_16x16.png",
+        "48": "./extension_icon/BrowserExtensionIcon_48x48.png",
+        "128": "./extension_icon/BrowserExtensionIcon_128x128.png"
+
+    },
+    "action": {
+        "default_icon":{
+            "16": "./extension_icon/BrowserExtensionIcon_16x16.png",
+            "48": "./extension_icon/BrowserExtensionIcon_48x48.png",
+            "128": "./extension_icon/BrowserExtensionIcon_128x128.png"
+
+        },
+        "default_title": "P2ych3: Malicious URL Detector",
+        "default_popup": "./pop_up/popup.html"
+    },
+
+    "content_scripts":[
+        {
+            "matches": ["http://*/*", "https://*/*"],
+            "css": ["core.js"],
+            "js": ["core.js"],
+            "run_at": "document_end",
+            "all_frames": true
+        }
+    ]
+}

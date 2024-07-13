@@ -1,0 +1,12 @@
+FROM python:3.9.19
+WORKDIR /docker
+COPY . /docker/
+RUN python3 -m pip install "tensorflow==2.10.1"
+RUN python3 -m pip install pandas
+RUN python3 -m pip install flask
+RUN python3 -m pip install flask_cors
+RUN python3 -m pip install "numpy<2"
+# ENTRYPOINT configures the docker to run as an executable
+# ENTRYPOINT ["python3", "docker_tokenizer.py"]
+CMD ["python3", "-m", "flask", "--app", "docker_tokenizer", "run",  "--host=0.0.0.0"]
+
