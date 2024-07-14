@@ -22,33 +22,33 @@ document.body.appendChild(bubbleDOM);
 //   bubbleDOM.style.visibility = 'hidden';
 // }, false);
 
-document.addEventListener('click', function(event) {
+document.addEventListener('click', async function(event) {
   // Check if the clicked element is a link with an href attribute
   if (event.target.tagName === 'A' && event.target.href) {
-    
-    // Forward Prediction
-    token = new Date();
-    predictSelection(event.target.href, token);
-
     // Prevent the default action (navigation)
     event.preventDefault();
     
+    // Generate Token
+    var token = new Date();
+
     // Log the href value
     console.log('Link clicked: ' + event.target.href);
-    console.log('Calculating risk ....')
+
+    // Wait for prediction
+    const prom = await predictSelection(event.target.href, token);
 
     // Get response
-
+    const response = parseOutput();
+    console.log(response)
 
     // Get User Confirmation
-    const userConfirm = confirm("Are you sure you want to continue?")
-
-
-    // Pause before redirecting
-    setTimeout(function() {
-      // Redirect after pause
-      window.location.href = event.target.href;
-    }, 10000); // Pause for 3 seconds
+    if (prom == 1){
+      const userConfirm = confirm("Are you sure you want to continue?\n \nWhatever happens after this is outside of our jurisdiction!")
+      if (userConfirm){
+        window.location.href = event.target.href;
+      } 
+      console.log("Good Choice :)")
+    };
   }
 }, false);
 
@@ -56,7 +56,7 @@ document.addEventListener('click', function(event) {
 function renderBubble(mouseX, mouseY, token) {
   jObj = parseOutput()
   if (token == jObj.sesh_token){
-    bubbleDOM.innerHTML = "This link is ${jObj.chance}% ${jObj.result}";
+    bubbleDOM.innerHTML = "This link is ", jObj.chance, "% ", jObj.result;
     bubbleDOM.style.top = mouseY + 'px';
     bubbleDOM.style.left = mouseX + 'px';
     bubbleDOM.style.visibility = 'visible';
@@ -66,30 +66,35 @@ function renderBubble(mouseX, mouseY, token) {
   
 }
 
-// Parse Response from HTTP Request
+// Parse Data from HTTP Request
 function parseOutput(){
-  const response = getCalculation();
-  console.log(response);
-  const respObj = JSON.parse(response);
+  getCalculation().then(data => {
+    data;
+  });
+  const respObj = JSON.parse(data);
   return respObj
 }
 
-// Get Response through Fetch
+// Get Data through Fetch
 async function getCalculation(){
   try {
     let response = await fetch('http://localhost:5000/get_url');
     let data = await response.json();
 
-    console.log(data)
-    return data
+    // console.log(data)
+    return data;
   } catch (error) {
-    console.error('Error while fetching', error)
+    console.error('Error while fetching', error);
   }
 }
 
 // Forward HTTP Request with Method POST
 function predictSelection(selection, token){
   const xhr = new XMLHttpRequest();
+  setTimeout(() => {
+    console.log("Calculating Risk!")
+  }, 500);
+  
   xhr.open("POST", "http://localhost:5000/detect_url", true);
   xhr.setRequestHeader("Content-type", "application/json");
   xhr.withCredentials=true;
@@ -99,13 +104,20 @@ function predictSelection(selection, token){
     tokens: token
   });
 
-  xhr.onload = () => {
-    console.log(xhr.response)
-  }
+  return new Promise((resolve, reject) => {
+    xhr.onreadystatechange = function() {
+      if (this.readyState === 4) {
+        if (this.status === 204) {
+          console.log("Risk Calculated!!")
+          resolve(1); // Success code
+        } else {
+          reject(new Error(`Request failed with status: ${xhr.status}`));
+        }
+      }
+    };
 
-  xhr.onerror = () =>{
-    console.log('Request failed with status: ${xhr.status}')
-  }
+    xhr.onerror = reject;
 
-  xhr.send(body)
+    xhr.send(body);
+  });
 }
