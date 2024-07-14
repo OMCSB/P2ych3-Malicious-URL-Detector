@@ -8,7 +8,7 @@
 ## Folder Architecture
     .
     ├─── LSTM_Model_V2_pytf                 # A '.h5' saved model
-    ├─── browser_extension                  # browser extension
+    ├─── browser_extension                  # browser extension utilities
     │    ├───extension_icon
     │    └───pop_up
     ├─── data                               # dataset utilized
@@ -56,6 +56,11 @@ Run the Docker Image
 docker run -p 5000:5000 image_name
 ```
 The code above ^ will create a docker container that is assigned to port `5000`. To see the raw JSON format of the data, go to `localhost:5000/get_url`
+
+When everything is done, to delete all container that is NOT RUNNING.
+```bash
+docker container prune
+```
 
 ### Expected Output
 Output #1 - Detecting Malicious/Benign URL
