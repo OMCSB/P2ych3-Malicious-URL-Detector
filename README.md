@@ -9,7 +9,6 @@
     .
     ├─── LSTM_Model_V2_pytf                 # A '.h5' saved model
     ├─── browser_extension                  # browser extension
-    │    ├───bg
     │    ├───extension_icon
     │    └───pop_up
     ├─── data                               # dataset utilized
@@ -40,6 +39,7 @@ Select `Load Unpacked`
 
 Select Folder that holds your `manifest.json`
 ![Select Folder](./readme_img/selectFolder.png "Select Folder")
+
 ### Running the Extension
 Traverse to the `docker` folder within the Local Github Repository
 ```bash
@@ -56,3 +56,7 @@ Run the Docker Image
 docker run -p 5000:5000 image_name
 ```
 The code above ^ will create a docker container that is assigned to port `5000`. To see the raw JSON format of the data, go to `localhost:5000/get_url`
+
+### Expected Output
+Output #1 - Detecting Malicious/Benign URL
+![Output #1](./readme_img/output1.png "Output #1")
