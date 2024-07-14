@@ -1,4 +1,4 @@
-# Malicious-URL-Detector
+# P2ych3:Malicious URL Detector with IDS and IPS
 
 ## Prerequisites
 - docker-desktop
