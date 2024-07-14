@@ -61,12 +61,14 @@ def detect_url():
             "sesh_token": req_json['tokens']
         }
         result.append(out)
+        return '', 204
     else:
         end_time = time.time()
         out = {
-            "result": "Malicious",
-            "chance": ones*2,
+            "result": "Benign",
+            "chance": nones*2,
             "time_taken": end_time-start_time,
             "sesh_token": req_json['tokens']
         }
         result.append(out)
+        return '', 204
