@@ -7,6 +7,7 @@
 
 ## Folder Architecture
     .
+    ├─── LSTM_Model_V2_pytf                 # A '.h5' saved model
     ├─── browser_extension                  # browser extension
     │    ├───bg
     │    ├───extension_icon
@@ -16,8 +17,9 @@
     │    ├───data
     │    ├───dock_utils
     │    └───LSTM_Model_V2_pytf
-    ├─── LSTM_Model_V2_pytf                 # A '.h5' saved model
+    ├─── readme_img                         # images linked in readme.md
     ├─── utils                              # Necessary functions/modules
+    ├─── .gitattributes
     ├─── LICENSE
     ├─── README.md
     └─── Training.ipynb
