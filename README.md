@@ -41,6 +41,10 @@ Select Folder that holds your `manifest.json`
 ![Select Folder](./readme_img/selectFolder.png "Select Folder")
 
 ### Running the Extension
+
+> [!IMPORTANT]
+> Make sure that Docker-Desktop is opened
+
 Traverse to the `docker` folder within the Local Github Repository
 ```bash
 cd path/to/docker/folder
