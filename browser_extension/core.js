@@ -1,12 +1,28 @@
+var urls = {};
 processLinks();
 
-// document.addEventListener("mouseover", function(event){
-//   currEl = event.target;
-//   if(currEl.tagName === 'H3'){
-//       parent
-//       console.log(currEl.parentElement.nodeName)
-//   }
-// });
+var popWindow = document.createElement('div')
+popWindow.setAttribute('class', 'popWind');
+document.body.appendChild(popWindow);
+
+document.addEventListener("mouseover", function(event){
+  currEl = event.target;
+  if(currEl.tagName === 'H3'){
+      let parentEl = currEl.parentElement;
+      if (parentEl.tagName === 'A' && parentEl.href){
+        let xPos = event.clientX;
+        let yPos = event.clientY;
+        let findUrl = urls[parentEl.href]
+        let result = findUrl["Result"];
+        let chance = findUrl["Chance"];
+        renderPopWindow(result, chance, xPos, yPos);
+      }
+  }
+}, false);
+
+document.addEventListener("mouseout", function(event){
+  popWindow.style.visibility = 'hidden';
+}, false)
 
 // document.addEventListener('click', async function(event) {
 //   // Check if the clicked element is a link with an href attribute
@@ -52,13 +68,21 @@ processLinks();
 //   }
 // }, false);
 
+function renderPopWindow(mouseR, mouseP, mouseX, mouseY){
+  popWindow.innerHTML = `Result: ${mouseR} <br>Probability: ${mouseP}%`
+  popWindow.style.height = '50px';
+  popWindow.style.width = '150px';
+  popWindow.style.top = mouseY + 'px';
+  popWindow.style.left = mouseX + 'px';
+  popWindow.style.visibility = 'visible';
+}
 
 // Get a node list of every child elements that matches the selector (.yuRUbf > div > span > a)
 // Matches every anchor element under the '.yuRUbf' class's div's span element  
 async function processLinks() {
   var links = document.querySelectorAll('.yuRUbf > div > span > a');
-  var urls = {};
   let linkCnt = 0;
+  let malCount = 0;
   console.log("Please wait while we search for malicious links");
 
   for (let link of links) {
@@ -67,7 +91,17 @@ async function processLinks() {
 
     // Extracts the HREF from each found in <a> element
     var extLink = link.getAttribute('href');
-
+    
+    linkCnt++;
+    if (linkCnt == links.length){
+      console.log(`Calculating... (${linkCnt}/${links.length})`)
+      setTimeout(()=>{
+        console.log(`Finished Calculating! Found ${malCount} Possible Malicious Link`)
+      }, 500) 
+    } else {
+      console.log(`Calculating... (${linkCnt}/${links.length})`)
+    };
+      
     // Waits for promise response (1 or print error in console) from predictSelection function
     const postUrlResult = await predictSelection(extLink, token);
 
@@ -88,6 +122,7 @@ async function processLinks() {
               childElement.style.backgroundColor = "green";
               childElement.style.color = "black";
             } else {
+              malCount+=1;
               childElement.style.backgroundColor = "red";
               childElement.style.color = "white";
             }
@@ -97,18 +132,10 @@ async function processLinks() {
       } else {
         console.log("Fetching failed");
       }
-      linkCnt++;
-      if (linkCnt == links.length){
-        console.log(`Calculating... (${linkCnt}/${links.length})`)
-        console.log('Finished Calculating !')
-      } else {
-        console.log(`Calculating... (${linkCnt}/${links.length})`)
-      }
-      
     }
   }
+  return urls
 }
-
 
 function parseJsonVal(jsonVal, tok){
   let finding = jsonVal.find(item => item.sesh_token === tok);
@@ -135,9 +162,6 @@ async function getPrediction() {
 // Forward HTTP Request with Method POST
 function predictSelection(selection, token){
   const xhr = new XMLHttpRequest();
-  setTimeout(() => {
-    console.log("Calculating Risk!")
-  }, 500);
   
   xhr.open("POST", "http://localhost:5000/detect_url", true);
   xhr.setRequestHeader("Content-type", "application/json");
@@ -152,7 +176,7 @@ function predictSelection(selection, token){
     xhr.onreadystatechange = function() {
       if (this.readyState === 4) {
         if (this.status === 204) {
-          console.log("Risk Calculated!!")
+          console.log("Risk Calculated!")
           resolve(1); // Success code
         } else {
           reject(new Error(`Request failed with status: ${xhr.status}`));
