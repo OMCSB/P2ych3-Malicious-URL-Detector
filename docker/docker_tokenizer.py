@@ -45,7 +45,7 @@ def detect_url():
     tokening = fit_tokens(req_json['url'])
     
     ones, nones = 0, 0
-    for _ in range(50):
+    for _ in range(25):
         predicted = lstm_model.predict(tokening).round()
         if predicted == 1:
             ones += 1
@@ -56,7 +56,7 @@ def detect_url():
         end_time = time.time()
         out = {
             "result": "Malicious",
-            "chance": ones*2,
+            "chance": ones*4,
             "time_taken": end_time-start_time,
             "sesh_token": req_json['tokens']
         }
@@ -66,7 +66,7 @@ def detect_url():
         end_time = time.time()
         out = {
             "result": "Benign",
-            "chance": nones*2,
+            "chance": nones*4,
             "time_taken": end_time-start_time,
             "sesh_token": req_json['tokens']
         }
