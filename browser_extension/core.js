@@ -24,49 +24,51 @@ document.addEventListener("mouseout", function(event){
   popWindow.style.visibility = 'hidden';
 }, false)
 
-// document.addEventListener('click', async function(event) {
-//   // Check if the clicked element is a link with an href attribute
-//   if (event.target.tagName === 'A' && event.target.href) {
-//     // Prevent the default action (navigation)
-//     event.preventDefault();
+document.addEventListener('click', async function(event) {
+  // Check if the clicked element is a link with an href attribute
+  if (event.target.tagName === 'H3') {
+    event.preventDefault();
+
+    // Get Parent Element
+    clickParent = event.target.parentElement;
     
-//     // Generate Token
-//     var token = new Date();
-//     let jsonToken = token.toJSON(); 
+    // Generate Token
+    var token = new Date();
+    let jsonToken = token.toJSON(); 
 
-//     // Log the href value
-//     console.log('Link clicked: ' + event.target.href);
+    // Log the href value
+    console.log('Link clicked: ' + clickParent.href);
+    console.log('Calculating risk of: ' + clickParent.href)
 
-//     // Wait for prediction
-//     const predResponse = await predictSelection(event.target.href, token);
-//     const getUrl = await getPrediction();
-//     console.log(getUrl);
+    // Wait for prediction
+    const predResponse = await predictSelection(clickParent.href , token);
+    const getUrl = await getPrediction();
 
-//     (async () => {
-//       // Check if renderUrl is not null or undefined
-//       if (getUrl) {
-//         let findJsonValue = getUrl.find(item => item.sesh_token === jsonToken);
-//         if (findJsonValue) {
-//           let result = findJsonValue["result"];
-//           let chance = findJsonValue["chance"];
-//           let time_taken = findJsonValue["time_taken"];
+    (async () => {
+      // Check if renderUrl is not null or undefined
+      if (getUrl) {
+        let findJsonValue = getUrl.find(item => item.sesh_token === jsonToken);
+        if (findJsonValue) {
+          let result = findJsonValue["result"];
+          let chance = findJsonValue["chance"];
+          let time_taken = findJsonValue["time_taken"];
 
-//           if (predResponse == 1){
-//             setTimeout(() => {
-//               const userConfirm = confirm(`Are you sure you want to continue?\n\n'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''\nThe Link is ${chance}% accurate of being a ${result} link !\n'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''\nWhatever happens after this is outside of our jurisdiction!\n\nTime taken to complete: ${time_taken.toFixed(2)} seconds`);
-//               if (userConfirm){
-//                 window.location.href = event.target.href;
-//               } 
-//               console.log("Good Choice :)"); 
-//             }, 1000);
-//           };
-//         } else {
-//           console.log('No matching token found');
-//         }
-//       }
-//     })();
-//   }
-// }, false);
+          if (predResponse == 1){
+            setTimeout(() => {
+              const userConfirm = confirm(`Are you sure you want to continue?\n\n'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''\nThe Link is ${chance}% accurate of being a ${result} link !\n'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''\nWhatever happens after this is outside of our jurisdiction!\n\nTime taken to complete: ${time_taken.toFixed(2)} seconds`);
+              if (userConfirm){
+                window.location.href = clickParent.href;
+              } 
+              console.log("Good Choice :)"); 
+            }, 1000);
+          };
+        } else {
+          console.log('No matching token found');
+        }
+      }
+    })();
+  }
+}, true);
 
 function renderPopWindow(mouseR, mouseP, mouseX, mouseY){
   popWindow.innerHTML = `Result: ${mouseR} <br>Probability: ${mouseP}%`
