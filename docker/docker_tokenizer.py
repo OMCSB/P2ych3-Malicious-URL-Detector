@@ -32,10 +32,27 @@ def fit_tokens(url):
     return pad_rev
 
 result = []
+requests = []
+
+@app.route('/get_events')
+def get_events():
+    return jsonify(requests)
 
 @app.route('/get_url')
 def get_url():
     return jsonify(result)
+
+@app.route('/send_events', methods=['POST'])
+def send_events():
+    event_json = request.get_json()
+    save = {
+        "Timestamp": event_json['Timestamp'],
+        "URL": event_json['URL'],
+        "Method": event_json['Method'],
+        "Header": event_json['Header']
+    }
+    requests.append
+    return '', 204
 
 @app.route('/detect_url', methods=['POST'])
 def detect_url():
