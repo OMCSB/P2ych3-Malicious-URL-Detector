@@ -20,6 +20,28 @@
         "default_popup": "./pop_up/popup.html"
     },
 
+    "background":{
+        "service_worker": "./back/background.js"
+    },
+    
+    "permissions":[
+        "webRequest", "storage", "declarativeNetRequest", "declarativeNetRequestFeedback", "tabs"
+    ],
+
+    "host_permissions":[
+        "<all_urls>"
+    ],
+
+    "declarative_net_request":{
+        "rule_resources":[
+            {
+                "id": "ruleset_1",
+                "enabled": true,
+                "path": "./rules/rules1.json"
+            }
+        ]
+    },
+
     "content_scripts":[
         {
             "matches": ["<all_urls>"],
